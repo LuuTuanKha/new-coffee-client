@@ -1,18 +1,16 @@
+import React from 'react'
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useAppDispatch } from 'app/hooks';
+import { authActions } from 'features/auth/authSlice';
+interface Props {
+    
+}
 
-const Header = () => {
-  const history = useHistory()
-  const dispatch = useDispatch()
-  const logoutHandle = () =>{
-    sessionStorage.clear();
-    history.push("/")
-  }
-  return (
-    <div>
+export const Header = (props: Props) => {
+    const dispatch = useAppDispatch()
+    return (
+        <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light" style={{ paddingRight: '50px' }}>
         <div className="container-fluid">
           <button
@@ -102,8 +100,8 @@ const Header = () => {
              
             
               <li>
-                <a type="button" className="dropdown-item text-danger"
-                onClick={() => logoutHandle()}
+                <a type="button" href="#top" className="dropdown-item text-danger"
+                 onClick={()=> dispatch(authActions.logOut())}
                 >Đăng xuất</a>
               </li>
             </ul>
@@ -113,7 +111,5 @@ const Header = () => {
 
      
     </div>
-  )
+    )
 }
-
-export default Header

@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { Component } from 'react'
 import { Layout} from 'antd';
-import About from '../../pages/student/About';
 
-
-
-const MainLayout = ({layoutSelectedIndex}) => {
- 
-    const { Content } = Layout
-    const layoutList = [<About/> ]
+interface Props {
+    layoutSelectedIndex: number
     
+}
+
+const MainLayout = (props: Props) => {
+    const {layoutSelectedIndex} = props
+    const { Content } = Layout
+    const layoutList: Component[] = [ ]
     return (
         <Layout style={{ padding: '0px 10px 10px' }}>
             <Content

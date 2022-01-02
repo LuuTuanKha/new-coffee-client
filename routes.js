@@ -4,7 +4,7 @@ import Register from "./pages/Register";
 const routes = [
     { path: ["/"], component: LoginPage, exact: true },
     { path: ["/dashboard"], component: Dashbroad, exact: true },
-    { path: ["/register"], component: Register, exact: true },
+    // { path: ["/register"], component: Register, exact: true },
    
         
    

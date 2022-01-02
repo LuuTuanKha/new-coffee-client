@@ -1,9 +1,13 @@
 import React from 'react'
 import { Layout, Menu } from 'antd';
 import { UserOutlined, NotificationOutlined, CommentOutlined, ControlOutlined } from '@ant-design/icons'
+interface Props {
+    onSelectedLayoutIndexChange : any
+}
 
-const LeftSlider = ({onSelectedLayoutIndexChange}) => {
-  const { Sider } = Layout
+const LeftSlider = (props: Props) => {
+    const {onSelectedLayoutIndexChange} = props
+    const { Sider } = Layout
   const { SubMenu } = Menu
 
   const listIconOfSubMenu =[ <UserOutlined/>,<CommentOutlined />,<NotificationOutlined />,<ControlOutlined />]
@@ -11,8 +15,8 @@ const LeftSlider = ({onSelectedLayoutIndexChange}) => {
   { key: "supplier", title: 'Khoa', items: [{ key: 3, content: 'Danh sách khoa' }] },
 ]
   
-  return (
-    <Sider width={250} className="site-layout-background">
+    return (
+        <Sider width={250} className="site-layout-background">
       <Menu
         mode="inline"
         defaultSelectedKeys={['0']}
@@ -37,7 +41,7 @@ const LeftSlider = ({onSelectedLayoutIndexChange}) => {
         }
       </Menu>
     </Sider>
-  )
+    )
 }
 
 export default LeftSlider
