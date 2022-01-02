@@ -34,6 +34,10 @@ export const ProductPage = (props: Props) => {
       title: 'Giá bán',
       dataIndex: 'price',
       key: 'price',
+      sorter: {
+        compare: (a: Product, b: Product) => a.price - b.price,
+        multiple: 3,
+      },
     },
     {
       title: 'Loại',
