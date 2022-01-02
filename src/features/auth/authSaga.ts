@@ -1,13 +1,15 @@
 import { PayloadAction } from '@reduxjs/toolkit';
+import employeeAPi from 'api/auth-api';
 import { push } from 'connected-react-router';
+import { LoginResponseType } from 'models';
 import { call, delay, fork, put, take } from 'redux-saga/effects';
 import { authActions, LoginPayLoad } from './authSlice';
 
 function* handleLogin(payload: LoginPayLoad) {
   try {
     yield delay(1000);
-
-    localStorage.setItem('access_token', payload.email)
+    const response: LoginResponseType = yield call(employeeAPi.login(payload));
+      localStorage.setItem('access_token', payload.email)
     yield put(authActions.loginSuccess(payload))
     yield put(push('/dashbroad'))
   } catch (error) {

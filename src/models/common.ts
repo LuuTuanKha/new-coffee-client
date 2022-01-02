@@ -1,3 +1,4 @@
+import { Employee } from "./employee";
 
 export interface PaginationParams {
   _limit: number;
@@ -8,6 +9,11 @@ export interface PaginationParams {
 export interface ListResponse<T> {
   data: T[];
   pagination: PaginationParams;
+}
+export interface LoginResponseType{
+  user: Employee;
+  token: string
+
 }
 
 export interface ListParams {

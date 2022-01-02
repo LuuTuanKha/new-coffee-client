@@ -11,8 +11,8 @@ const LeftSlider = (props: Props) => {
   const { SubMenu } = Menu
 
   const listIconOfSubMenu =[ <UserOutlined/>,<CommentOutlined />,<NotificationOutlined />,<ControlOutlined />]
-  let subMenu = [{ key: "product", title: 'Sinh viên', items: [{ key: 0, content: 'Thông tin dự án' },{ key: 1, content: 'Thông tin cá nhân' },{ key: 2, content: 'Danh sách sinh viên' }] },
-  { key: "supplier", title: 'Khoa', items: [{ key: 3, content: 'Danh sách khoa' }] },
+  let subMenu = [{ key: "order", title: 'Hoá đơn', items: [{ key: 0, content: 'Tạo hoá đơn mới' },{ key: 1, content: 'Thông tin cá nhân' },{ key: 2, content: 'Danh sách hoá đơn' }] },
+  { key: "products", title: 'Sản phẩm', items: [{ key: 3, content: 'Danh sách sản phẩm' }] },
 ]
   
     return (
@@ -20,7 +20,7 @@ const LeftSlider = (props: Props) => {
       <Menu
         mode="inline"
         defaultSelectedKeys={['0']}
-        defaultOpenKeys={['product']}
+        defaultOpenKeys={['order']}
         style={{ height: '100%', borderRight: 0 }}
       >
        
