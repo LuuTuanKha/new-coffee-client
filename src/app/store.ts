@@ -7,11 +7,14 @@ import productReducer from 'features/product/productSlice';
 import { history } from 'utils';
 import rootSaga from './rootSage';
 import orderItemsSlice from 'features/order/orderItemsSlice';
+import categoryReducer from 'features/category/categorySlice';
+import orderItemsReducer from 'features/order/orderItemsSlice';
 const rootReducer = combineReducers({
   router:  connectRouter(history),
   auth: authReducer,
   product: productReducer,
-  orderItems: orderItemsSlice 
+  orderItems: orderItemsReducer,
+  category: categoryReducer 
 })
 const sagaMiddleWare = createSagaMiddleware();
 export const store = configureStore({

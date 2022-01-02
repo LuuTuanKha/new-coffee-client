@@ -1,6 +1,5 @@
-import { PayloadAction } from '@reduxjs/toolkit';
 import productAPi from 'api/product-api';
-import { ListParams, ListResponseNonPagination, Product, } from 'models';
+import { Product } from 'models';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { productActions } from './productSlice';
 

@@ -35,7 +35,7 @@ export const OrderTable = (props: Props) => {
       );
     } else dispatch(orderItemsActions.minusQuantityOrderItem(obj));
   };
-  const columns = [
+  const columns : any = [
     {
       title: 'STT',
       dataIndex: '_id',

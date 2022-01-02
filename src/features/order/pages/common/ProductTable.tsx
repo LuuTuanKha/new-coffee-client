@@ -1,22 +1,31 @@
 import { Button, Table, Tag } from 'antd'
 import { useAppDispatch, useAppSelector } from 'app/hooks'
+import { categoryActions } from 'features/category/categorySlice'
 import { orderItemsActions } from 'features/order/orderItemsSlice'
 import { productActions } from 'features/product/productSlice'
-import { Product } from 'models'
+import { Category, FilterFormat, Product } from 'models'
 import React, { useEffect } from 'react'
 
 interface Props {
     
 }
 
+
 export const ProductTable = (props: Props) => {
     const dispatch = useAppDispatch()
     const listProduct: Product[] = useAppSelector(state => state.product.list)
+    const listCategory: Category[] = useAppSelector(state => state.category.list)
+    const listCategoryFormatted : FilterFormat[] = []
+    listCategory.forEach((category, index) =>{
+        let filerItem : FilterFormat = {text: category.name, value:category.name}
+        listCategoryFormatted.push(filerItem)
+    })
     useEffect(() => {
         dispatch(productActions.fetchProductList());
+        dispatch(categoryActions.fetchCategoryList());
 
     }, [])
-    const columns = [
+    const columns: any = [
         
         {
             title: 'Tên sản phẩm',
@@ -33,11 +42,21 @@ export const ProductTable = (props: Props) => {
             width: '15%'
         },
         {
-            title: 'description',
-            dataIndex: 'description',
-            key: 'description',
+            title: 'Loại',
+            dataIndex: ['category','name'],
+            key: 'category',
+            filters: listCategoryFormatted,
+              filterMode: 'tree',
+              filterSearch: true,
+              onFilter: (value: string, record: Product) => record?.category.name.includes(value),
            
         },
+        // {
+        //     title: 'description',
+        //     dataIndex: 'description',
+        //     key: 'description',
+           
+        // },
         {
             title: 'Trạng thái',
             dataIndex: 'isFeatured',
@@ -77,6 +96,7 @@ export const ProductTable = (props: Props) => {
     return (
         <div className='col-7'>
         <Table rowKey="_id" columns={columns} dataSource={listProduct} pagination={false} scroll={{ y: 550 }} />
+       
         </div>
     )
 }

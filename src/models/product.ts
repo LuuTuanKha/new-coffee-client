@@ -6,7 +6,7 @@ export interface Product {
   description: string;
   images?: [string];
   price: number;
-  category?: Category;
+  category: Category;
   isFeatured?: boolean;
   dateCreated?: string;
   __v: number;

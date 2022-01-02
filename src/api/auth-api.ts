@@ -1,5 +1,5 @@
 import { LoginPayLoad } from 'features/auth/authSlice';
-import {  ListParams, ListResponse, LoginResponseType, User } from 'models';
+import { ListParams, ListResponse, LoginResponseType } from 'models';
 import { Employee } from 'models/employee';
 import axiosClient from './axios-client';
 

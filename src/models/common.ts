@@ -16,6 +16,11 @@ export interface LoginResponseType{
 
 }
 
+export interface FilterFormat {
+  text: string;
+  value: string;
+}
+
 export interface ListParams {
     _page: number;
     _limit: number;

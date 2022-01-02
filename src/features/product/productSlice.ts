@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
-import { ListParams, ListResponseNonPagination } from 'models';
 import { Product } from 'models/product';
 
 export interface ProductState {
@@ -22,15 +21,13 @@ const productSlice = createSlice({
       state.loading = true;
     },
     fetchProductListSuccess(state, action: PayloadAction<Product[]>) {
-        console.log('success')
-        console.log(action.payload)
-        state.list = action.payload;
+      state.list = action.payload;
 
-        state.loading = false;
-      },
-      fetchProductListFailed(state) {
-        state.loading = false;
-      },
+      state.loading = false;
+    },
+    fetchProductListFailed(state) {
+      state.loading = false;
+    },
   },
 });
 
