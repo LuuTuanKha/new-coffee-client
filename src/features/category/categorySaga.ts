@@ -13,9 +13,6 @@ function* fetchCategoryList() {
   }
 }
 
-
-
 export default function* categorySaga() {
   yield takeLatest(categoryActions.fetchCategoryList, fetchCategoryList);
-
 }

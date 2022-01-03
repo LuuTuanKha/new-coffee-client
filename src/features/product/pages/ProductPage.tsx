@@ -10,16 +10,15 @@ interface Props {}
 export const ProductPage = (props: Props) => {
   const dispatch = useAppDispatch();
   const listProduct: Product[] = useAppSelector((state) => state.product.list);
-  const listCategory: Category[] = useAppSelector(state => state.category.list)
-  const listCategoryFormatted : FilterFormat[] = []
-  listCategory.forEach((category, index) =>{
-      let filerItem : FilterFormat = {text: category.name, value:category.name}
-      listCategoryFormatted.push(filerItem)
-  })
+  const listCategory: Category[] = useAppSelector((state) => state.category.list);
+  const listCategoryFormatted: FilterFormat[] = [];
+  listCategory.forEach((category) => {
+    let filerItem: FilterFormat = { text: category.name, value: category.name };
+    listCategoryFormatted.push(filerItem);
+  });
   useEffect(() => {
     dispatch(productActions.fetchProductList());
     dispatch(categoryActions.fetchCategoryList());
-
   }, []);
   const columns: any = [
     {
@@ -28,7 +27,6 @@ export const ProductPage = (props: Props) => {
       key: 'name',
       render: (text: string) => <strong>{text}</strong>,
       width: '25%',
-      
     },
     {
       title: 'Giá bán',
@@ -44,9 +42,9 @@ export const ProductPage = (props: Props) => {
       dataIndex: ['category', 'name'],
       key: 'category',
       filters: listCategoryFormatted,
-              filterMode: 'tree',
-              filterSearch: true,
-              onFilter: (value: string, record: Product) => record?.category.name.includes(value),
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value: string, record: Product) => record?.category.name.includes(value),
     },
     {
       title: 'description',

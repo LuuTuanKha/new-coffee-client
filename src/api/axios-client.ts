@@ -9,9 +9,15 @@ const axiosClient = axios.create({
 
 // Add a request interceptor
 axiosClient.interceptors.request.use(
-  function (config: AxiosRequestConfig) {
+  (config: AxiosRequestConfig) => {
     // Do something before request is sent
+    const accessToken: string | null = sessionStorage.getItem('access_token');
+    if (accessToken) {
+      if (config.headers) config.headers.Authorization = `Bearer ${accessToken}`;
+     
+    }
     return config;
+
   },
   function (error) {
     // Do something with request error

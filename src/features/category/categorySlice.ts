@@ -17,18 +17,17 @@ const categorySlice = createSlice({
   name: 'category',
   initialState: initialState,
   reducers: {
-      fetchCategoryList(state) {
+    fetchCategoryList(state) {
       state.loading = true;
     },
     fetchCategoryListSuccess(state, action: PayloadAction<Category[]>) {
-        
-        state.list = action.payload;
+      state.list = action.payload;
 
-        state.loading = false;
-      },
-      fetchcategoryListFailed(state) {
-        state.loading = false;
-      },
+      state.loading = false;
+    },
+    fetchcategoryListFailed(state) {
+      state.loading = false;
+    },
   },
 });
 
