@@ -85,7 +85,7 @@ export const ListOrderPage = (props: Props) => {
           columns={columns}
           dataSource={listOrder}
           pagination={false}
-          scroll={{ y: 750 }}
+          scroll={{ y: 800 }}
         />
       }
     </div>

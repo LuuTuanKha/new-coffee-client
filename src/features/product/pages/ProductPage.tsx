@@ -1,4 +1,4 @@
-import { Button, Table, Tag } from 'antd';
+import { Button, Image, Table, Tag } from 'antd';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { categoryActions } from 'features/category/categorySlice';
 import { Category, FilterFormat, Product } from 'models';
@@ -25,7 +25,15 @@ export const ProductPage = (props: Props) => {
       title: 'Tên sản phẩm',
       dataIndex: 'name',
       key: 'name',
-      render: (text: string) => <strong>{text}</strong>,
+      render: (text: string, obj: any) => (
+        <div className='row'>
+          <Image
+            width={60}
+            src={obj.images[0]}
+          />
+          <strong className='col-6'> {text} </strong>
+        </div>
+      ),
       width: '25%',
     },
     {
@@ -50,7 +58,6 @@ export const ProductPage = (props: Props) => {
       title: 'description',
       dataIndex: 'description',
       key: 'description',
-      // width: '20%'
     },
     {
       title: 'Trạng thái',
@@ -60,13 +67,11 @@ export const ProductPage = (props: Props) => {
         if (tag === false) return <Tag color="red">{(tag + '').toUpperCase()}</Tag>;
         else return <Tag color="green">{(tag + '').toUpperCase()}</Tag>;
       },
-      // width: '20%'
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'dateCreated',
       key: 'dateCreated',
-      // width: '20%'
     },
     {
       title: 'Chi tiết',
@@ -94,7 +99,7 @@ export const ProductPage = (props: Props) => {
         columns={columns}
         dataSource={listProduct}
         pagination={false}
-        scroll={{ y: 750 }}
+        scroll={{ y: 800 }}
       />
     </div>
   );

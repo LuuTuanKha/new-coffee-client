@@ -1,5 +1,5 @@
-import {  ListParams, ListResponse } from 'models';
-import { Product } from 'models/product';
+import { ListResponse } from 'models';
+import { Product } from 'models';
 import axiosClient from './axios-client';
 
 const productAPi = {

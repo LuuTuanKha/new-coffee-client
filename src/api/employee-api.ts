@@ -1,15 +1,10 @@
-import { LoginPayLoad } from 'features/auth/authSlice';
-import { Employee, ListParams, ListResponse, LoginResponseType } from 'models';
+import { Employee, ListResponse } from 'models';
 import axiosClient from './axios-client';
 
-const employeeAPi = {
-  getAll(params: ListParams): Promise<ListResponse<Employee>> {
+const EmployeeAPi = {
+  getAll(): Promise<ListResponse<Employee>> {
     const url = '/employees';
-    return axiosClient.get(url, { params });
-  },
-  login(data: LoginPayLoad): Promise<LoginResponseType> {
-    const url = '/employees/login';
-    return axiosClient.post(url, data);
+    return axiosClient.get(url);
   },
   add(data: Employee): Promise<Employee> {
     const url = '/employees';
@@ -30,4 +25,4 @@ const employeeAPi = {
   },
 };
 
-export default employeeAPi;
+export default EmployeeAPi;

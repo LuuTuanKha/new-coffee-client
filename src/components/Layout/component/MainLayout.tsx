@@ -1,8 +1,10 @@
-import React, { Component } from 'react'
-import { Layout} from 'antd';
-import { ProductPage } from 'features/product/pages/ProductPage';
-import { OrderPage } from 'features/order/pages/OrderPage';
+import { Layout } from 'antd';
+import { ListCustomerPage } from 'features/customer/pages/ListCustomerPage';
+import { ListEmployeePage } from 'features/employee/pages/ListEmployeePage';
 import { ListOrderPage } from 'features/order/pages/ListOrderPage';
+import { OrderPage } from 'features/order/pages/OrderPage';
+import { ProductPage } from 'features/product/pages/ProductPage';
+import React from 'react';
 
 interface Props {
     layoutSelectedIndex: number
@@ -12,7 +14,7 @@ interface Props {
 const MainLayout = (props: Props) => {
     const {layoutSelectedIndex} = props
     const { Content } = Layout
-    const layoutList: any[] = [<OrderPage/>,<ListOrderPage/>,<ProductPage/>,<ProductPage/>,<ProductPage/>,<ProductPage/>, ]
+    const layoutList: any[] = [<OrderPage/>,<ListOrderPage/>,<ProductPage/>,<ProductPage/>,<ListCustomerPage/>,<ListEmployeePage/>, ]
     return (
         <Layout style={{ padding: '0px 10px 10px' }}>
             <Content

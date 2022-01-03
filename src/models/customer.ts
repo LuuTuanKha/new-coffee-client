@@ -5,4 +5,5 @@ export interface Customer {
   password?: string;
   phone?: string;
   address?: string;
+  __v?: number;
 }

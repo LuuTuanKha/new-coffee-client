@@ -1,12 +1,13 @@
 import { Button, Card, Col, Form, Input, Row, Spin } from 'antd';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { Redirect } from 'react-router-dom';
 // import { useHistory } from 'react-router-dom';
 import { authActions } from '../authSlice';
 
 const fullWidthStyle = { margin: '10px', height: '150px' };
 
 export default function LoginPage() {
-  // const history = useHistory()
+  const accessToken =sessionStorage.getItem('access_token')
   const dispatch = useAppDispatch();
 
   const isLogging = useAppSelector((state) => state.auth.logging);
@@ -17,7 +18,7 @@ export default function LoginPage() {
   const onFinishFailed = (values: any) => {
     console.log('idk why must do something in this -.-');
   };
-
+  if(accessToken) return <Redirect to="/dashbroad"/>
   return (
     <div>
       <Row gutter={6}>

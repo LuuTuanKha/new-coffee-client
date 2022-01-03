@@ -1,8 +1,8 @@
-import React from 'react'
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import { useAppDispatch } from 'app/hooks';
 import { authActions } from 'features/auth/authSlice';
+import React from 'react';
 interface Props {
     
 }

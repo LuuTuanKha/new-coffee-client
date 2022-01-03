@@ -1,5 +1,6 @@
-import { Button, Table, Tag } from 'antd';
+import { Button, Image, Table, Tag } from 'antd';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { Loading } from 'components/Common/Loading';
 import { categoryActions } from 'features/category/categorySlice';
 import { orderItemsActions } from 'features/order/orderItemsSlice';
 import { productActions } from 'features/product/productSlice';
@@ -11,6 +12,7 @@ interface Props {}
 export const ProductTable = (props: Props) => {
   const dispatch = useAppDispatch();
   const listProduct: Product[] = useAppSelector((state) => state.product.list);
+  const isLoading: boolean = useAppSelector((state) => state.product.loading);
   const listCategory: Category[] = useAppSelector((state) => state.category.list);
   const listCategoryFormatted: FilterFormat[] = [];
   listCategory.forEach((category, index) => {
@@ -26,8 +28,13 @@ export const ProductTable = (props: Props) => {
       title: 'Tên sản phẩm',
       dataIndex: 'name',
       key: 'name',
-      render: (text: string) => <strong>{text}</strong>,
-      width: '35%',
+      render: (text: string, obj: any) => (
+        <div className="row">
+          <Image width={60} src={obj.images[0]} />
+          <strong className="col-6"> {text} </strong>
+        </div>
+      ),
+      width: '40%',
     },
     {
       title: 'Giá bán',
@@ -92,13 +99,17 @@ export const ProductTable = (props: Props) => {
   ];
   return (
     <div className="col-7">
-      <Table
-        rowKey="_id"
-        columns={columns}
-        dataSource={listProduct}
-        pagination={false}
-        scroll={{ y: 550 }}
-      />
+      {isLoading === true ? (
+        <Loading />
+      ) : (
+        <Table
+          rowKey="_id"
+          columns={columns}
+          dataSource={listProduct}
+          pagination={false}
+          scroll={{ y: 800 }}
+        />
+      )}
     </div>
   );
 };
