@@ -9,7 +9,7 @@ interface Props {}
 
 export const ListOrderPage = (props: Props) => {
   const dispatch = useAppDispatch();
-  const listOrder = useAppSelector((state) => state.order.list);
+  const listOrder = useAppSelector((state) => state.order.rawData.data);
   const isLoading = useAppSelector((state) => state.order.loading);
   useEffect(() => {
     dispatch(OrderActions.fetchOrderList());
@@ -40,6 +40,8 @@ export const ListOrderPage = (props: Props) => {
       title: 'Tổng tiền',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
+      render: (price : number) => new Intl.NumberFormat('de-DE',{style:'currency',currency:'VND'}).format(price),
+
       // width: '20%'
     },
     {

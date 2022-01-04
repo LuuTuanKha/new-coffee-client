@@ -1,8 +1,8 @@
-import { Order, OrderResponse } from 'models';
+import { ListResponse, Order, OrderResponse } from 'models';
 import axiosClient from './axios-client';
 
 const orderAPi = {
-  getAll(): Promise<OrderResponse[]> {
+  getAll(): Promise<ListResponse<OrderResponse>> {
     const url = '/orders';
     return axiosClient.get(url);
   },

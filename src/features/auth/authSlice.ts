@@ -7,7 +7,9 @@
 
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Toast } from 'components/Common/Toast';
 import { User } from 'models';
+import { toast } from 'react-toastify';
 
 export interface LoginPayLoad {
   email: string;
@@ -34,9 +36,12 @@ const authSlice = createSlice({
       state.isLoggedIn = true;
       state.logging = false;
       state.currentUSer = action.payload;
+      Toast('success','Đăng nhập thành công','')
     },
     loginFailed(state, action: PayloadAction<String>) {
       state.isLoggedIn = false;
+      state.logging = false;
+      toast.error("MY SUCCESS");
     },
     logOut(state) {
       state.isLoggedIn = false;

@@ -1,9 +1,9 @@
 import { Employee } from "./employee";
 
 export interface PaginationParams {
-  _limit: number;
-  _page: number;
-  _total: number;
+  limit?: number;
+  currentPage: number;
+  totalPage: number;
 }
 
 export interface ListResponse<T> {

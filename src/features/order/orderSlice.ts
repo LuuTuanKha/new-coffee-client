@@ -1,17 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
-import { OrderResponse } from 'models';
-import { Order } from 'models/Order';
+import { ListResponse, OrderResponse } from 'models';
 
 export interface OrderState {
   loading: boolean;
-  list: OrderResponse[];
+  rawData: ListResponse<OrderResponse> ;
  
 }
 
 const initialState: OrderState = {
   loading: false,
-  list: [],
+  rawData: {data: [], pagination: {
+    totalPage:1,
+    currentPage:1
+  }},
 };
 const OrderSlice = createSlice({
   name: 'Order',
@@ -20,8 +22,8 @@ const OrderSlice = createSlice({
     fetchOrderList(state) {
       state.loading = true;
     },
-    fetchOrderListSuccess(state, action: PayloadAction<OrderResponse[]>) {
-      state.list = action.payload;
+    fetchOrderListSuccess(state, action: PayloadAction<ListResponse<OrderResponse>>) {
+      state.rawData.data = action.payload.data
       state.loading = false;
     },
 
@@ -35,7 +37,7 @@ const OrderSlice = createSlice({
 export const OrderActions = OrderSlice.actions;
 
 // Selectors
-export const selectOrderList = (state: RootState) => state.order.list;
+export const selectOrderList = (state: RootState) => state.order.rawData;
 export const selectOrderLoading = (state: RootState) => state.order.loading;
 
 

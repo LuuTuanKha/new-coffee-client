@@ -40,6 +40,8 @@ export const ProductTable = (props: Props) => {
       title: 'Giá bán',
       dataIndex: 'price',
       key: 'price',
+      render: (price : number) => new Intl.NumberFormat('de-DE',{style:'currency',currency:'VND'}).format(price),
+
       sorter: {
         compare: (a: Product, b: Product) => a.price - b.price,
         multiple: 3,

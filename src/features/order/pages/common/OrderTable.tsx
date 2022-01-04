@@ -35,7 +35,7 @@ export const OrderTable = (props: Props) => {
       );
     } else dispatch(orderItemsActions.minusQuantityOrderItem(obj));
   };
-  const columns : any = [
+  const columns: any = [
     {
       title: 'STT',
       dataIndex: '_id',
@@ -94,7 +94,8 @@ export const OrderTable = (props: Props) => {
       <div className="text-center">
         <h4>HOÁ ĐƠN</h4>
       </div>
-      <Table locale={locale}
+      <Table
+        locale={locale}
         rowKey={'_id'}
         dataSource={listOrderItems}
         pagination={false}
@@ -106,19 +107,26 @@ export const OrderTable = (props: Props) => {
       <div>
         Tổng thành tiền:{' '}
         <strong style={{ fontWeight: 'bolder' }}>
-          <h5>{totalPrice} VNĐ</h5>
+          <h5>
+            {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'VND' }).format(
+              totalPrice
+            )}{' '}
+          </h5>
         </strong>
         <div className="row text-center">
           <div className="col-6">
-            <Button 
-            onClick={()=> dispatch(orderItemsActions.destroyOrderItems())}
-            danger icon={<i className="fas fa-trash"></i>} type="primary">
+            <Button
+              onClick={() => dispatch(orderItemsActions.destroyOrderItems())}
+              danger
+              icon={<i className="fas fa-trash"></i>}
+              type="primary"
+            >
               {' '}
               &nbsp; &nbsp;Huỷ hoá đơn
             </Button>
           </div>
           <div className="col-6">
-            <Button  icon={<i className="fas fa-trash"></i>} type="primary">
+            <Button icon={<i className="fas fa-trash"></i>} type="primary">
               {' '}
               &nbsp; &nbsp;Lưu hoá đơn
             </Button>
