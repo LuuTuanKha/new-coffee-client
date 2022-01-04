@@ -4,7 +4,7 @@ import {
   EMPLOYEE_NOTFOUND, EMPLOYEE_NOTFOUND_VN, PASSWORD_ERROR,
   PASSWORD_ERROR_VN
 } from 'constants/auth-const';
-import { User } from 'models';
+import { LoginResponseType } from 'models';
 
 export interface LoginPayLoad {
   email: string;
@@ -13,7 +13,7 @@ export interface LoginPayLoad {
 export interface AuthState {
   isLoggedIn: boolean;
   logging?: boolean;
-  currentUSer?: User;
+  currentUSer?: LoginResponseType;
 }
 const initialState: AuthState = {
   isLoggedIn: false,
@@ -27,7 +27,7 @@ const authSlice = createSlice({
     login(state, action: PayloadAction<LoginPayLoad>) {
       state.logging = true;
     },
-    loginSuccess(state, action: PayloadAction<User>) {
+    loginSuccess(state, action: PayloadAction<LoginResponseType>) {
       state.isLoggedIn = true;
       state.logging = false;
       state.currentUSer = action.payload;

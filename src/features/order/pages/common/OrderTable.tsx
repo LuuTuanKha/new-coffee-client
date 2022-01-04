@@ -59,14 +59,14 @@ export const OrderTable = (props: Props) => {
       };
       try {
         await orderAPi.add(order);
-
         Toast(
           'success',
           'Tạo hoá đơn thành công',
           'Hoá đơn được tạo thành công. Bạn có thể xem lại hoá đơn đã tạo trong danh sách hoá đơn'
         );
-        setSelectedCustomer({});
         dispatch(orderItemsActions.destroyOrderItems());
+        setSelectedCustomer({});
+
       } catch (error) {
         console.log(error);
       }

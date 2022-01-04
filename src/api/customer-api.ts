@@ -11,9 +11,9 @@ const CustomerAPi = {
     const url = '/customers';
     return axiosClient.post(url, data);
   },
-  update(data: Customer): Promise<Customer> {
-    const url = '/customers';
-    return axiosClient.patch(url, data);
+  update(id:string , data: Customer): Promise<Customer> {
+    const url = '/customers/'+id;
+    return axiosClient.put(url, data);
   },
 
   getById(id: string): Promise<Customer> {

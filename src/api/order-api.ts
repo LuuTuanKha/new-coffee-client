@@ -3,7 +3,7 @@ import axiosClient from './axios-client';
 
 const orderAPi = {
   getAll(currentPage: number): Promise<ListResponse<OrderResponse>> {
-    const url = '/orders?limit=10&page='+currentPage;
+    const url = '/orders?limit=15&page='+currentPage;
     return axiosClient.get(url);
   },
   add(data: Order): Promise<Order> {

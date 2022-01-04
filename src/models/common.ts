@@ -1,5 +1,3 @@
-import { Employee } from "./employee";
-
 export interface PaginationParams {
   limit?: number;
   currentPage: number;
@@ -12,10 +10,10 @@ export interface ListResponse<T> {
   currentPage: number;
   totalPage: number;
 }
-export interface LoginResponseType{
-  user: Employee;
-  token: string
-
+export interface LoginResponseType {
+  name: string;
+  role: string | null | undefined;
+  token: string;
 }
 
 export interface FilterFormat {
@@ -24,10 +22,10 @@ export interface FilterFormat {
 }
 
 export interface ListParams {
-    _page: number;
-    _limit: number;
-    _sort: number;
-    _order: 'asc' | 'desc';
+  _page: number;
+  _limit: number;
+  _sort: number;
+  _order: 'asc' | 'desc';
 
-    [ key : string] :any;
+  [key: string]: any;
 }

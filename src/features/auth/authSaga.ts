@@ -11,7 +11,8 @@ function* handleLogin(payload: LoginPayLoad) {
 
     if (response.token) {
       sessionStorage.setItem('access_token', response.token);
-      yield put(authActions.loginSuccess(payload));
+      if (response.role) sessionStorage.setItem('role',response?.role)
+      yield put(authActions.loginSuccess(response));
       yield put(push('/dashbroad'));
     } else {
       console.log(response);

@@ -12,9 +12,10 @@ axiosClient.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     // Do something before request is sent
     const accessToken: string | null = sessionStorage.getItem('access_token');
+    
     if (accessToken) {
       if (config.headers) config.headers.Authorization = `Bearer ${accessToken}`;
-     
+      
     }
     return config;
 

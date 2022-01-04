@@ -82,20 +82,11 @@ export default function LoginPage() {
                 >
                   ĐĂNG NHẬP
                 </Button>
-                {/* <Button
-                  type="primary"
-                  className="btn btn-primary"
-                  // onClick={()=> dispatch(authActions.logOut())}
-                  onClick={() => history.push("/register")}
-                >
-                  ĐĂNG KÝ
-                </Button> */}
+               
               </Form.Item>
             </Form>
           </Card>
         </Col>
-
-        <Col className="gutter-row" span={6}></Col>
       </Row>
     </div>
   );
