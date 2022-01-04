@@ -1,15 +1,10 @@
-
-
-
-
-
-
-
-
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Toast } from 'components/Common/Toast';
+import {
+  EMPLOYEE_NOTFOUND, EMPLOYEE_NOTFOUND_VN, PASSWORD_ERROR,
+  PASSWORD_ERROR_VN
+} from 'constants/auth-const';
 import { User } from 'models';
-import { toast } from 'react-toastify';
 
 export interface LoginPayLoad {
   email: string;
@@ -36,12 +31,14 @@ const authSlice = createSlice({
       state.isLoggedIn = true;
       state.logging = false;
       state.currentUSer = action.payload;
-      Toast('success','Đăng nhập thành công','')
     },
-    loginFailed(state, action: PayloadAction<String>) {
+    loginFailed(state, action: PayloadAction<any>) {
       state.isLoggedIn = false;
       state.logging = false;
-      toast.error("MY SUCCESS");
+      let message = action.payload;
+      if (message === EMPLOYEE_NOTFOUND)
+        Toast('danger', 'Đăng nhập thất bại', EMPLOYEE_NOTFOUND_VN);
+      if (message === PASSWORD_ERROR) Toast('danger', 'Đăng nhập thất bại', PASSWORD_ERROR_VN);
     },
     logOut(state) {
       state.isLoggedIn = false;

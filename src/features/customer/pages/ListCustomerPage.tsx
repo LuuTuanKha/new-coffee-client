@@ -1,4 +1,4 @@
-import { Button, Table, Tag } from 'antd';
+import { Button, Table } from 'antd';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Loading } from 'components/Common/Loading';
 import { Customer } from 'models';
@@ -13,7 +13,7 @@ export const ListCustomerPage = () => {
     const isLoading = useAppSelector((state) => state.customer.loading);
     useEffect(() => {
       dispatch(customerActions.fetchCustomerList());
-    }, []);
+    }, [dispatch]);
     const columns: any = [
         
         

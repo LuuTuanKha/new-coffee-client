@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-export function Toast(type: 'danger' | 'warning'| 'success', title: string, content: string ) {
+export function ToastWithComponentContent(type: 'danger' | 'warning'| 'success', title: string, content: any ) {
     toast(
         <div>
           <div className="toast-custom__body">

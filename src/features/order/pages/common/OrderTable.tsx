@@ -1,18 +1,84 @@
-import { Button, Table } from 'antd';
+import { Button, Modal, Tag, Table } from 'antd';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { orderItemsActions } from 'features/order/orderItemsSlice';
-import { OrderItem } from 'models';
+import { customerActions } from '../../../customer/customerSlice';
+import { OrderItem, Order, OrderItemForAdd } from 'models';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Customer } from 'models';
+import orderAPi from 'api/order-api';
+import { Toast } from 'components/Common/Toast';
+import { ToastWithComponentContent } from 'components/Common';
 
 interface Props {}
 let locale = {
   emptyText: 'Chưa có sản phẩm nào được thêm vào',
 };
+
 export const OrderTable = (props: Props) => {
   const dispatch = useAppDispatch();
-  const listOrderItems = useAppSelector((state) => state.orderItems.listItem);
+  const listOrderItems: OrderItem[] = useAppSelector((state) => state.orderItems.listItem);
   const totalPrice = useAppSelector((state) => state.orderItems.totalPrice);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | undefined>();
+  const [isShowModal, setisShowModal] = useState<boolean>(false);
+  const [titleOfModal, settitleOfModal] = useState('title');
+  const listCustomer = useAppSelector((state) => state.customer.list);
+  const isLoading = useAppSelector((state) => state.customer.loading);
+  useEffect(() => {
+    dispatch(customerActions.fetchCustomerList());
+  }, [dispatch]);
+  const handleCancel = () => {
+    setisShowModal(false);
+  };
+  const showModal = () => {
+    settitleOfModal('Chọn khách hàng:');
+    setisShowModal(true);
+  };
+  const handleAddOrderButon = async () => {
+    if (listOrderItems.length === 0) {
+      Toast(
+        'danger',
+        'Chưa có sản phẩm nào trong hoá đơn',
+        'Chưa có sản phẩm nào trong hoá đơn. Vui lòng thêm trước khi muốn tạo!'
+      );
+    } else {
+      if (!selectedCustomer) {
+        Toast('warning', 'Lưu ý!', 'Bạn vừa tạo hoá đơn với khách hàng vô danh!');
+      }
+      let listOrderItemsForAdd: OrderItemForAdd[] = [];
+      listOrderItems.forEach((item, index) => {
+        listOrderItemsForAdd.push({
+          product: item?.product?._id,
+          quantity: item.quantity,
+        });
+      });
+      console.log(listOrderItemsForAdd);
+      let order: Order = {
+        orderItems: listOrderItemsForAdd,
+        customer: selectedCustomer?._id,
+      };
+      try {
+        let response = await orderAPi.add(order);
+        
+        Toast(
+          'success',
+          'Tạo hoá đơn thành công',
+          'Hoá đơn được tạo thành công. Bạn có thể xem lại hoá đơn đã tạo trong danh sách hoá đơn'
+        );
+        setSelectedCustomer({});
+        dispatch(orderItemsActions.destroyOrderItems());
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+  const footerOfDetailModal = [
+    <Button key="back" onClick={() => handleCancel()}>
+      Thoát
+    </Button>,
+  ];
+
   const onMinusOrderItemClick = (obj: OrderItem) => {
     if (obj.quantity === 1) {
       toast(
@@ -89,8 +155,59 @@ export const OrderTable = (props: Props) => {
       },
     },
   ];
+
+  const customerColumns: any = [
+    {
+      title: 'Tên khách hàng',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text: string) => <strong>{text}</strong>,
+    },
+
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+      // width: '20%'
+    },
+    {
+      title: 'Số điện thoại',
+      dataIndex: 'phone',
+      key: 'phone',
+      // width: '20%'
+    },
+    {
+      title: 'Địa chỉ',
+      dataIndex: 'address',
+      key: 'address',
+      // width: '20%'
+    },
+
+    {
+      title: 'Chi tiết',
+      key: 'lastOnline',
+      render: (obj: Customer) => {
+        return (
+          <div>
+            {selectedCustomer?._id === obj._id ? (
+              <Tag color="#87d068">{'Đang chọn'.toUpperCase()}</Tag>
+            ) : (
+              <Button
+                icon={<i className="fas fa-check"></i>}
+                type="primary"
+                onClick={() => setSelectedCustomer(obj)}
+              >
+                &nbsp;&nbsp;Chọn
+              </Button>
+            )}
+          </div>
+        );
+      },
+    },
+  ];
   return (
     <div style={{ paddingTop: '15px' }} className="col-5">
+       
       <div className="text-center">
         <h4>HOÁ ĐƠN</h4>
       </div>
@@ -102,9 +219,59 @@ export const OrderTable = (props: Props) => {
         scroll={{ y: 350 }}
         columns={columns}
       />
-      {/* <hr /> */}
+
       <br></br>
-      <div>
+      <div className="row text-center">
+        <h5 className="col-6 text-start">Khách hàng: </h5>
+        <div className="col-6">
+          <Button onClick={showModal} icon={<i className="fas fa-user"></i>} type="primary">
+            {' '}
+            &nbsp; &nbsp;Chọn khách hàng
+          </Button>
+          <Modal
+            closable={false}
+            width={1000}
+            style={{ top: 20 }}
+            title={titleOfModal}
+            visible={isShowModal}
+            footer={footerOfDetailModal}
+          >
+            <div>
+              <Table
+                locale={locale}
+                rowKey={'_id'}
+                dataSource={listCustomer}
+                pagination={false}
+                scroll={{ y: 350 }}
+                columns={customerColumns}
+              />
+            </div>
+          </Modal>
+        </div>
+        <div className="col-12 text-start" style={{ paddingTop: '15px', fontSize: '18px' }}>
+          {typeof selectedCustomer?._id !== 'undefined' ? (
+            <div>
+              <div>
+                Tên khách hàng: <strong>{selectedCustomer.name}</strong>
+              </div>
+              <div>
+                SĐT: <strong>{selectedCustomer.phone}</strong>
+              </div>
+              <div>
+                Email: <strong>{selectedCustomer.email}</strong>
+              </div>
+              <div>
+                Địa chỉ: <strong>{selectedCustomer.address}</strong>
+              </div>
+            </div>
+          ) : (
+            <div>Chưa có khách hàng nào được chọn</div>
+          )}
+        </div>
+      </div>
+      <br></br>
+      <hr />
+      <div style={{ paddingTop: '15px', fontSize: '18px' }}>
         Tổng thành tiền:{' '}
         <strong style={{ fontWeight: 'bolder' }}>
           <h5>
@@ -126,7 +293,11 @@ export const OrderTable = (props: Props) => {
             </Button>
           </div>
           <div className="col-6">
-            <Button icon={<i className="fas fa-trash"></i>} type="primary">
+            <Button
+              onClick={() => handleAddOrderButon()}
+              icon={<i className="fas fa-trash"></i>}
+              type="primary"
+            >
               {' '}
               &nbsp; &nbsp;Lưu hoá đơn
             </Button>

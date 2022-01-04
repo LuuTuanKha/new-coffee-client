@@ -7,22 +7,24 @@ import { authActions, LoginPayLoad } from './authSlice';
 
 function* handleLogin(payload: LoginPayLoad) {
   try {
-    
-    const response: LoginResponseType = yield call(employeeAPi.login,payload);
-    sessionStorage.setItem('access_token', response.token)
-    yield put(authActions.loginSuccess(payload))
-    yield put(push('/dashbroad'))
-  } catch (error) {
-    yield put(authActions.loginFailed("Login failed"))
-    // yield put()
+    const response: LoginResponseType = yield call(employeeAPi.login, payload);
+
+    if (response.token) {
+      sessionStorage.setItem('access_token', response.token);
+      yield put(authActions.loginSuccess(payload));
+      yield put(push('/dashbroad'));
+    } else {
+      console.log(response);
+    }
+  } catch (error: any) {
+    console.log(error.response.data);
+    yield put(authActions.loginFailed(error.response.data.message));
     
   }
- 
 }
 function* handleLogout() {
-
   sessionStorage.removeItem('access_token');
-  yield put(push('/login'))
+  yield put(push('/login'));
 }
 function* watchLoginFlow() {
   while (true) {

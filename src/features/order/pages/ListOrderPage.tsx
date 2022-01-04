@@ -1,4 +1,4 @@
-import { Button,Table, Tag } from 'antd';
+import { Button, Table, Tag } from 'antd';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Loading } from 'components/Common/Loading';
 import { OrderResponse } from 'models';
@@ -40,10 +40,10 @@ export const ListOrderPage = (props: Props) => {
       title: 'Tổng tiền',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
-      render: (price : number) => new Intl.NumberFormat('de-DE',{style:'currency',currency:'VND'}).format(price),
-
-      // width: '20%'
+      render: (price: number) =>
+        new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'VND' }).format(price),
     },
+
     {
       title: 'Trạng thái',
       dataIndex: 'status',
@@ -52,13 +52,11 @@ export const ListOrderPage = (props: Props) => {
         if (tag === 'Pending') return <Tag color="#2db7f5">{(tag + '').toUpperCase()}</Tag>;
         else return <Tag color="#87d068">{(tag + '').toUpperCase()}</Tag>;
       },
-      // width: '20%'
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'dateOrdered',
       key: 'dateOrdered',
-      // width: '20%'
     },
     {
       title: 'Chi tiết',
@@ -81,7 +79,9 @@ export const ListOrderPage = (props: Props) => {
   ];
   return (
     <div>
-      { isLoading === true ? <Loading/> :
+      {isLoading === true ? (
+        <Loading />
+      ) : (
         <Table
           rowKey="_id"
           columns={columns}
@@ -89,7 +89,7 @@ export const ListOrderPage = (props: Props) => {
           pagination={false}
           scroll={{ y: 800 }}
         />
-      }
+      )}
     </div>
   );
 };

@@ -1,6 +1,10 @@
+import { OrderItem } from './order-item';
 
-
+export interface OrderItemForAdd {
+  product?: string;
+  quantity: number;
+}
 export interface Order {
-  orderItems: string[];
-  customer: string;
+  orderItems: OrderItemForAdd[];
+  customer: string | undefined;
 }
