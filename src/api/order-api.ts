@@ -2,8 +2,8 @@ import { ListResponse, Order, OrderResponse } from 'models';
 import axiosClient from './axios-client';
 
 const orderAPi = {
-  getAll(): Promise<ListResponse<OrderResponse>> {
-    const url = '/orders';
+  getAll(currentPage: number): Promise<ListResponse<OrderResponse>> {
+    const url = '/orders?limit=10&page='+currentPage;
     return axiosClient.get(url);
   },
   add(data: Order): Promise<Order> {

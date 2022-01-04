@@ -1,11 +1,12 @@
+import { PayloadAction } from '@reduxjs/toolkit';
 import OrderAPi from 'api/order-api';
 import { ListResponse, OrderResponse } from 'models';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import { OrderActions } from './orderSlice';
 
-function* fetchOrderList() {
+function* fetchOrderList(action: PayloadAction<number>) {
   try {
-    const response: ListResponse<OrderResponse> = yield call(OrderAPi.getAll);
+    const response: ListResponse<OrderResponse> = yield call(OrderAPi.getAll,action.payload);
     yield put(OrderActions.fetchOrderListSuccess(response));
   } catch (error) {
     console.log('Failed to fetch Order list', error);
@@ -14,5 +15,5 @@ function* fetchOrderList() {
 }
 
 export default function* OrderSaga() {
-  yield takeLatest(OrderActions.fetchOrderList, fetchOrderList);
+  yield takeEvery(OrderActions.fetchOrderList, fetchOrderList);
 }

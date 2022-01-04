@@ -1,15 +1,14 @@
-import { Button, Modal, Tag, Table } from 'antd';
+import { Button, Modal, Table, Tag } from 'antd';
+import orderAPi from 'api/order-api';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { Loading } from 'components/Common/Loading';
+import { Toast } from 'components/Common/Toast';
 import { orderItemsActions } from 'features/order/orderItemsSlice';
-import { customerActions } from '../../../customer/customerSlice';
-import { OrderItem, Order, OrderItemForAdd } from 'models';
+import { Customer, Order, OrderItem, OrderItemForAdd } from 'models';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Customer } from 'models';
-import orderAPi from 'api/order-api';
-import { Toast } from 'components/Common/Toast';
-import { ToastWithComponentContent } from 'components/Common';
+import { customerActions } from '../../../customer/customerSlice';
 
 interface Props {}
 let locale = {
@@ -59,8 +58,8 @@ export const OrderTable = (props: Props) => {
         customer: selectedCustomer?._id,
       };
       try {
-        let response = await orderAPi.add(order);
-        
+        await orderAPi.add(order);
+
         Toast(
           'success',
           'Tạo hoá đơn thành công',
@@ -207,7 +206,6 @@ export const OrderTable = (props: Props) => {
   ];
   return (
     <div style={{ paddingTop: '15px' }} className="col-5">
-       
       <div className="text-center">
         <h4>HOÁ ĐƠN</h4>
       </div>
@@ -228,25 +226,29 @@ export const OrderTable = (props: Props) => {
             {' '}
             &nbsp; &nbsp;Chọn khách hàng
           </Button>
-          <Modal
-            closable={false}
-            width={1000}
-            style={{ top: 20 }}
-            title={titleOfModal}
-            visible={isShowModal}
-            footer={footerOfDetailModal}
-          >
-            <div>
-              <Table
-                locale={locale}
-                rowKey={'_id'}
-                dataSource={listCustomer}
-                pagination={false}
-                scroll={{ y: 350 }}
-                columns={customerColumns}
-              />
-            </div>
-          </Modal>
+          {isLoading === true ? (
+            <Loading />
+          ) : (
+            <Modal
+              closable={false}
+              width={1000}
+              style={{ top: 20 }}
+              title={titleOfModal}
+              visible={isShowModal}
+              footer={footerOfDetailModal}
+            >
+              <div>
+                <Table
+                  locale={locale}
+                  rowKey={'_id'}
+                  dataSource={listCustomer}
+                  pagination={false}
+                  scroll={{ y: 350 }}
+                  columns={customerColumns}
+                />
+              </div>
+            </Modal>
+          )}
         </div>
         <div className="col-12 text-start" style={{ paddingTop: '15px', fontSize: '18px' }}>
           {typeof selectedCustomer?._id !== 'undefined' ? (

@@ -1,8 +1,8 @@
-import { Button, Table, Tag } from 'antd';
+import { Button, Pagination, Table, Tag } from 'antd';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Loading } from 'components/Common/Loading';
 import { OrderResponse } from 'models';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { OrderActions } from '../orderSlice';
 
 interface Props {}
@@ -10,10 +10,12 @@ interface Props {}
 export const ListOrderPage = (props: Props) => {
   const dispatch = useAppDispatch();
   const listOrder = useAppSelector((state) => state.order.rawData.data);
+  const totalPage = useAppSelector((state) => state.order.rawData.totalPage);
   const isLoading = useAppSelector((state) => state.order.loading);
+  const [currentPage, setcurrentPage] = useState<number>(1)
   useEffect(() => {
-    dispatch(OrderActions.fetchOrderList());
-  }, []);
+    dispatch(OrderActions.fetchOrderList(currentPage));
+  }, [currentPage,dispatch]);
 
   const columns: any = [
     {
@@ -82,6 +84,7 @@ export const ListOrderPage = (props: Props) => {
       {isLoading === true ? (
         <Loading />
       ) : (
+        <div>
         <Table
           rowKey="_id"
           columns={columns}
@@ -89,6 +92,12 @@ export const ListOrderPage = (props: Props) => {
           pagination={false}
           scroll={{ y: 800 }}
         />
+          <div className="text-center">
+                <Pagination showSizeChanger={false} current={currentPage} onChange={(e) => setcurrentPage(e)} total={totalPage * 10} />
+               
+            </div>
+
+        </div>
       )}
     </div>
   );

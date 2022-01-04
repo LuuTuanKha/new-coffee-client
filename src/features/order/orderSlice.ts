@@ -5,35 +5,29 @@ import { ListResponse, Order, OrderResponse } from 'models';
 export interface OrderState {
   loading: boolean;
   rawData: ListResponse<OrderResponse>;
-  data: Order | undefined;
 }
 
 const initialState: OrderState = {
   loading: false,
   rawData: {
     data: [],
-    pagination: {
-      totalPage: 1,
-      currentPage: 1,
-    },
+    totalPage: 1,
+    currentPage: 1,
   },
-  data: undefined,
-};
 
-const initialAddState: any = {
-  loading: false,
-  data: {},
 };
 
 const OrderSlice = createSlice({
   name: 'order',
   initialState: initialState,
   reducers: {
-    fetchOrderList(state) {
+    fetchOrderList(state,action: PayloadAction<number>) {
+      console.log(action.payload)
       state.loading = true;
     },
     fetchOrderListSuccess(state, action: PayloadAction<ListResponse<OrderResponse>>) {
-      state.rawData.data = action.payload.data;
+      state.rawData = action.payload;
+      
       state.loading = false;
     },
 
@@ -47,7 +41,6 @@ const OrderSlice = createSlice({
     // addOrderSuccess(state){
     //   state.loading = false
     // }
-    
   },
 });
 

@@ -8,7 +8,9 @@ export interface PaginationParams {
 
 export interface ListResponse<T> {
   data: T[];
-  pagination: PaginationParams;
+  limit?: number;
+  currentPage: number;
+  totalPage: number;
 }
 export interface LoginResponseType{
   user: Employee;
