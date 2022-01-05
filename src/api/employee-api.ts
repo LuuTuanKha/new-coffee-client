@@ -10,9 +10,9 @@ const EmployeeAPi = {
     const url = '/employees';
     return axiosClient.post(url, data);
   },
-  update(data: Employee): Promise<Employee> {
-    const url = '/employees';
-    return axiosClient.patch(url, data);
+  update(id : string ,data: Employee): Promise<Employee> {
+    const url = '/employees/'+id;
+    return axiosClient.put(url, data);
   },
 
   getById(id: string): Promise<Employee> {

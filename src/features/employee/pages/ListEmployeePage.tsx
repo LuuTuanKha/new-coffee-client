@@ -11,6 +11,7 @@ export const ListEmployeePage = () => {
   const dispatch = useAppDispatch();
   const listEmployee = useAppSelector((state) => state.employee.list);
   const isLoading = useAppSelector((state) => state.employee.loading);
+  const [selectedEmployee, setselectedEmployee] = useState<Employee>()
   useEffect(() => {
     dispatch(employeeActions.fetchEmployeeList());
   }, [dispatch]);
@@ -53,6 +54,49 @@ export const ListEmployeePage = () => {
     </Button>,
   ];
 
+  // -- Detail customer Modal
+  const [isShowDetailModal, setisShowDetailModal] = useState(false);
+  const handleShowDetailModal = async (obj: Employee) => {
+    console.log(obj);
+    
+    await setselectedEmployee(obj);
+    await setisShowDetailModal(true);
+  };
+  const handleCancelDetailModal = () => {
+    setisShowDetailModal(false);
+  };
+
+  const onFormSubmitDetailModal = async (employee: Employee) => {
+    try {
+      if(employee._id)
+      await EmployeeAPi.update(employee._id,employee);
+      Toast(
+        'success',
+        'Cập nhật nhân viên thành công!',
+        'nhân viên được cập nhật thành công. Bạn có thể xem lại trong danh sách nhân viên.'
+      );
+      dispatch(employeeActions.fetchEmployeeList());
+      setisShowDetailModal(false);
+    } catch (error: any) {
+      Toast('danger', 'Cập nhật nhân viên thất bại!', error.response.data.error);
+    }
+  };
+  const footerOfDetailModal = [
+    <Button key="back" onClick={() => handleCancelDetailModal()}>
+      Thoát
+    </Button>,
+
+    <Button
+      form="DetailForm"
+      icon={<i className="fas fa-save"></i>}
+      type="primary"
+      key="submit"
+      htmlType="submit"
+    >
+      &nbsp;Cập nhật
+    </Button>,
+  ];
+
   const columns: any = [
     {
       title: 'Tên nhân viên',
@@ -90,7 +134,7 @@ export const ListEmployeePage = () => {
             <Button
               icon={<i className="fas fa-user-circle"></i>}
               type="primary"
-              // onClick={() => showModal(obj)}
+              onClick={() => handleShowDetailModal(obj)}
             >
               &nbsp;&nbsp;Chi tiết
             </Button>
@@ -169,6 +213,76 @@ export const ListEmployeePage = () => {
               </Form>
             </div>
           </Modal>
+          {isShowDetailModal && (
+            <Modal
+              closable={false}
+              style={{ top: 20 }}
+              title={<strong>Chi tiết khách hàng:</strong>}
+              visible={isShowDetailModal}
+              footer={footerOfDetailModal}
+            >
+              <div>
+                <Form
+                  id="DetailForm"
+                  labelCol={{ span: 7 }}
+                  wrapperCol={{ span: 20 }}
+                  layout="horizontal"
+                  onFinish={onFormSubmitDetailModal}
+                  initialValues={selectedEmployee}
+                >
+                  <Form.Item
+                  label="Tên :"
+                  name="_id"
+                  rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
+                  hasFeedback
+                  
+                >
+                  <Input disabled />
+                </Form.Item>
+                  <Form.Item
+                    label="Tên :"
+                    name="name"
+                    rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
+                    hasFeedback
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Email:"
+                    name="email"
+                    rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
+                    hasFeedback
+                  >
+                    <Input />
+                  </Form.Item>
+                  {/* <Form.Item
+                    label="Mật khẩu:"
+                    name="password"
+                    rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
+                    hasFeedback
+                  >
+                    <Input.Password />
+                  </Form.Item> */}
+                  <Form.Item
+                    label="Địa chỉ: "
+                    name="address"
+                    rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
+                    hasFeedback
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Số điện thoại:"
+                    name="phone"
+                    rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
+                    hasFeedback
+                  >
+                    <Input />
+                  </Form.Item>
+                </Form>
+              </div>
+            </Modal>
+          )}
           <Table
             rowKey="_id"
             columns={columns}
@@ -178,6 +292,8 @@ export const ListEmployeePage = () => {
           />
         </div>
       )}
+
+      
     </div>
   );
 };
