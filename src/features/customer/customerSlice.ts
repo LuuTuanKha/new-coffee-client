@@ -21,7 +21,7 @@ const CustomerSlice = createSlice({
       state.loading = true;
     },
     fetchCustomerResultListWhenSearch(state, action: PayloadAction<string>) {
-      state.loading = true;
+      // state.loading = true;
     },
     fetchCustomerListSuccess(state, action: PayloadAction<Customer[]>) {
       state.list = action.payload;
@@ -39,8 +39,7 @@ export const customerActions = CustomerSlice.actions;
 // Selectors
 export const selectCustomerList = (state: RootState) => state.customer.list;
 export const selectCustomerLoading = (state: RootState) => state.customer.loading;
-// export const selectCustomerFilter = (state: RootState) => state.Customer.filter;
-// export const selectCustomerPagination = (state: RootState) => state.Customer.pagination;
+
 
 // Reducer
 const customerReducer = CustomerSlice.reducer;

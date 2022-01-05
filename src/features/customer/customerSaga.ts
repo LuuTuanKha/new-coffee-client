@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import CustomerAPi from 'api/customer-api';
 import { Customer } from 'models';
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import { customerActions } from './customerSlice';
 
 function* fetchCustomerList() {
@@ -28,6 +28,6 @@ function* fetchCustomerResultListWhenSearch(action: PayloadAction<string>) {
 
 export default function* CustomerSaga() {
   yield takeLatest(customerActions.fetchCustomerList, fetchCustomerList);
-  yield takeEvery(customerActions.fetchCustomerResultListWhenSearch, fetchCustomerResultListWhenSearch);
+  yield takeLatest(customerActions.fetchCustomerResultListWhenSearch, fetchCustomerResultListWhenSearch);
 
 }

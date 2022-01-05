@@ -8,6 +8,11 @@ import { Loading } from 'components/Common/Loading';
 import { Customer, Product } from 'models';
 import React, { useEffect, useState } from 'react';
 import { customerActions } from '../customerSlice';
+
+let locale = {
+  emptyText: 'Chưa có sản phẩm nào được thêm vào',
+};
+
 export const ListCustomerPage = () => {
   const dispatch = useAppDispatch();
   const listCustomer = useAppSelector((state) => state.customer.list);
@@ -109,19 +114,16 @@ export const ListCustomerPage = () => {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
-      // width: '20%'
     },
     {
       title: 'Số điện thoại',
       dataIndex: 'phone',
       key: 'phone',
-      // width: '20%'
     },
     {
       title: 'Địa chỉ',
       dataIndex: 'address',
       key: 'address',
-      // width: '20%'
     },
 
     {
@@ -136,17 +138,11 @@ export const ListCustomerPage = () => {
               onClick={() => handleShowDetailModal(obj)}
               icon={<i className="fas fa-user-circle"></i>}
               type="primary"
-              // onClick={() => showModal(obj)}
             >
               &nbsp;&nbsp;Chi tiết
             </Button>
             &nbsp;&nbsp;
-            <Button
-              danger
-              icon={<OrderedListOutlined />}
-              type="primary"
-              // onClick={() => showModal(obj)}
-            >
+            <Button danger icon={<OrderedListOutlined />} type="primary">
               &nbsp;&nbsp;Lịch sử mua hàng
             </Button>
           </div>
@@ -162,14 +158,17 @@ export const ListCustomerPage = () => {
         <div>
           <div className="row">
             &nbsp;{' '}
-            <div className='col-5 text-start'>
+            <div className="col-5 text-start">
               <Search
                 placeholder="Nhập thông tin ..."
                 onSearch={(query) => onSearch(query)}
                 style={{ width: 200 }}
               />
+              <Button type="primary" onClick={() => dispatch(customerActions.fetchCustomerList())}>
+                Mặc định
+              </Button>
             </div>
-            <div className='col-6 text-end'>
+            <div className="col-6 text-end">
               <Button onClick={() => setisShowAddModal(true)} type="primary">
                 Khách hàng mới
               </Button>

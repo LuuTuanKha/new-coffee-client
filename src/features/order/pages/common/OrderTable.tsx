@@ -1,4 +1,5 @@
 import { Button, Modal, Table, Tag } from 'antd';
+import Search from 'antd/lib/input/Search';
 import orderAPi from 'api/order-api';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Loading } from 'components/Common/Loading';
@@ -12,7 +13,7 @@ import { customerActions } from '../../../customer/customerSlice';
 
 interface Props {}
 let locale = {
-  emptyText: 'Chưa có sản phẩm nào được thêm vào',
+  emptyText: 'Không tìm thấy kết quả nào',
 };
 
 export const OrderTable = (props: Props) => {
@@ -24,6 +25,14 @@ export const OrderTable = (props: Props) => {
   const [titleOfModal, settitleOfModal] = useState('title');
   const listCustomer = useAppSelector((state) => state.customer.list);
   const isLoading = useAppSelector((state) => state.customer.loading);
+
+  const onSearch = (query: string) => {
+    if (query === '') {
+      dispatch(customerActions.fetchCustomerList());
+    } else dispatch(customerActions.fetchCustomerResultListWhenSearch(query));
+
+  };
+
   useEffect(() => {
     dispatch(customerActions.fetchCustomerList());
   }, [dispatch]);
@@ -238,6 +247,12 @@ export const OrderTable = (props: Props) => {
               footer={footerOfDetailModal}
             >
               <div>
+              <Search
+                placeholder="Nhập thông tin ..."
+                onSearch={(query) => onSearch(query)}
+                style={{ width: 200 }}
+              />
+              <Button type='primary' onClick={()=> dispatch(customerActions.fetchCustomerList())}>Mặc định</Button>
                 <Table
                   locale={locale}
                   rowKey={'_id'}
