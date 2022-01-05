@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import OrderAPi from 'api/order-api';
 import { ListResponse, OrderResponse } from 'models';
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 import { OrderActions } from './orderSlice';
 
 function* fetchOrderList(action: PayloadAction<number>) {

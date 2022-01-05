@@ -20,6 +20,9 @@ const CustomerSlice = createSlice({
     fetchCustomerList(state) {
       state.loading = true;
     },
+    fetchCustomerResultListWhenSearch(state, action: PayloadAction<string>) {
+      state.loading = true;
+    },
     fetchCustomerListSuccess(state, action: PayloadAction<Customer[]>) {
       state.list = action.payload;
       state.loading = false;

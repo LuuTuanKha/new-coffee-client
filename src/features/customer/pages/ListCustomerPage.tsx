@@ -1,5 +1,6 @@
 import { OrderedListOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Modal, Table } from 'antd';
+import Search from 'antd/lib/input/Search';
 import CustomerAPi from 'api/customer-api';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Toast } from 'components/Common';
@@ -17,6 +18,11 @@ export const ListCustomerPage = () => {
     dispatch(customerActions.fetchCustomerList());
   }, [dispatch]);
 
+  const onSearch = (query: string) => {
+    if (query === '') {
+      dispatch(customerActions.fetchCustomerList());
+    } else dispatch(customerActions.fetchCustomerResultListWhenSearch(query));
+  };
   // -- Add customer Modal
   const [isShowAddModal, setisShowAddModal] = useState(false);
 
@@ -53,7 +59,7 @@ export const ListCustomerPage = () => {
   const [isShowDetailModal, setisShowDetailModal] = useState(false);
   const handleShowDetailModal = async (obj: Customer) => {
     console.log(obj);
-    
+
     await setselectedCustomer(obj);
     await setisShowDetailModal(true);
   };
@@ -63,8 +69,7 @@ export const ListCustomerPage = () => {
 
   const onFormSubmitDetailModal = async (customer: Product) => {
     try {
-      if(customer._id)
-      await CustomerAPi.update(customer._id,customer);
+      if (customer._id) await CustomerAPi.update(customer._id, customer);
       Toast(
         'success',
         'Cập nhật khách hàng thành công!',
@@ -155,10 +160,20 @@ export const ListCustomerPage = () => {
         <Loading />
       ) : (
         <div>
-          <div className="text-end">
-            <Button onClick={() => setisShowAddModal(true)} type="primary">
-              Khách hàng mới
-            </Button>
+          <div className="row">
+            &nbsp;{' '}
+            <div className='col-5 text-start'>
+              <Search
+                placeholder="Nhập thông tin ..."
+                onSearch={(query) => onSearch(query)}
+                style={{ width: 200 }}
+              />
+            </div>
+            <div className='col-6 text-end'>
+              <Button onClick={() => setisShowAddModal(true)} type="primary">
+                Khách hàng mới
+              </Button>
+            </div>
           </div>
 
           <Table
@@ -168,7 +183,6 @@ export const ListCustomerPage = () => {
             pagination={false}
             scroll={{ y: 800 }}
           />
-
           <Modal
             closable={false}
             style={{ top: 20 }}
@@ -192,7 +206,7 @@ export const ListCustomerPage = () => {
                 >
                   <Input />
                 </Form.Item>
-                
+
                 <Form.Item
                   label="Email:"
                   name="email"
@@ -228,7 +242,6 @@ export const ListCustomerPage = () => {
               </Form>
             </div>
           </Modal>
-
           {isShowDetailModal && (
             <Modal
               closable={false}
@@ -247,14 +260,13 @@ export const ListCustomerPage = () => {
                   initialValues={selectedCustomer}
                 >
                   <Form.Item
-                  label="Tên :"
-                  name="_id"
-                  rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
-                  hasFeedback
-                  
-                >
-                  <Input disabled />
-                </Form.Item>
+                    label="Tên :"
+                    name="_id"
+                    rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
+                    hasFeedback
+                  >
+                    <Input disabled />
+                  </Form.Item>
                   <Form.Item
                     label="Tên :"
                     name="name"

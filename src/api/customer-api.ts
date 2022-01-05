@@ -20,6 +20,10 @@ const CustomerAPi = {
     const url = `/customers/${id}`;
     return axiosClient.get(url);
   },
+  search(query: string): Promise<ListResponse<Customer>> {
+    const url = `/customers/search`;
+    return axiosClient.post(url, {"text" : query});
+  },
   remove(id: string): Promise<any> {
     const url = `/customers/${id}`;
     return axiosClient.delete(url);
