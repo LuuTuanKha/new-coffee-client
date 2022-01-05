@@ -1,5 +1,5 @@
 import { OrderedListOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Modal, Table } from 'antd';
+import { Button, Form, Input, Modal, Pagination, Table, Tag } from 'antd';
 import Search from 'antd/lib/input/Search';
 import CustomerAPi from 'api/customer-api';
 import orderAPi from 'api/order-api';
@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Toast } from 'components/Common';
 import { Loading } from 'components/Common/Loading';
 import { OrderActions } from 'features/order/orderSlice';
-import { Customer, ListParams, Product } from 'models';
+import { Customer, ListParams, OrderResponse, Product } from 'models';
 import React, { useEffect, useState } from 'react';
 import { customerActions } from '../customerSlice';
 
@@ -19,8 +19,10 @@ export const ListCustomerPage = () => {
   const listCustomer = useAppSelector((state) => state.customer.list);
   const isLoading = useAppSelector((state) => state.customer.loading);
   const listOrderByCustomer = useAppSelector((state) => state.order.rawData.data);
+  const totalPage = useAppSelector((state) => state.order.rawData.totalPage);
+  const isListOrderLoading = useAppSelector((state) => state.order.loading);
   const [selectedCustomer, setselectedCustomer] = useState<Customer>();
-  const [currentPage, setcurrentPage] = useState<number>(1)
+  const [currentPage, setcurrentPage] = useState<number>(1);
 
   useEffect(() => {
     dispatch(customerActions.fetchCustomerList());
@@ -32,14 +34,17 @@ export const ListCustomerPage = () => {
     } else dispatch(customerActions.fetchCustomerResultListWhenSearch(query));
   };
 
-  const handleCustomerOrderClick = (obj: string | undefined) =>{
-     
-      let params : ListParams = {
-        id: obj,
-        page: currentPage
-      } 
-      dispatch(OrderActions.fetchOrderListByCustomer(params))
-  }
+  const handleCustomerOrderClick = async (obj: Customer | undefined) => {
+    setcurrentPage(1)
+    setselectedCustomer(obj)
+    let params: ListParams = {
+      id: obj?._id,
+      page: 1,
+    };
+    
+    await dispatch(OrderActions.fetchOrderListByCustomer(params));
+    await setisShowListOrderModal(true);
+  };
   // -- Add customer Modal
   const [isShowAddModal, setisShowAddModal] = useState(false);
 
@@ -75,7 +80,7 @@ export const ListCustomerPage = () => {
   // -- Detail customer Modal
   const [isShowDetailModal, setisShowDetailModal] = useState(false);
   const handleShowDetailModal = async (obj: Customer) => {
-    console.log(obj);
+    
 
     await setselectedCustomer(obj);
     await setisShowDetailModal(true);
@@ -155,14 +160,93 @@ export const ListCustomerPage = () => {
             </Button>
             &nbsp;&nbsp;
             <Button
-            onClick = {() => handleCustomerOrderClick(obj?._id) }
-            danger icon={<OrderedListOutlined />} type="primary">
+              onClick={() => handleCustomerOrderClick(obj)}
+              danger
+              icon={<OrderedListOutlined />}
+              type="primary"
+            >
               &nbsp;&nbsp;Lịch sử mua hàng
             </Button>
           </div>
         );
       },
     },
+  ];
+  // List Orders Customer
+  const [isShowListOrderModal, setisShowListOrderModal] = useState(false);
+  const handleCancleListOrderModal = () => {
+    setisShowListOrderModal(false);
+  };
+  const handlePageListOrderOnChange = async (page: number) =>{
+    
+    setcurrentPage(page)
+    let params: ListParams = {
+      id: selectedCustomer?._id,
+      page: page,
+    };
+    
+    await dispatch(OrderActions.fetchOrderListByCustomer(params));
+  }
+  const footerOfListOrderlModal = [
+    <Button key="back" onClick={() => handleCancleListOrderModal()}>
+      Thoát
+    </Button>,
+  ];
+  const ListOrderTableColumns: any = [
+    {
+      title: 'Mã hoá đơn',
+      dataIndex: '_id',
+      key: '_id',
+      render: (text: string) => <strong>{text}</strong>,
+      width: '20%',
+    },
+    {
+      title: 'Người lập HĐ',
+      dataIndex: ['employee', 'name'],
+      key: 'name',
+      render: (text: string) => <strong>{text}</strong>,
+    },
+
+    {
+      title: 'Tổng tiền',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+      render: (price: number) =>
+        new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'VND' }).format(price),
+    },
+
+    {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status',
+      render: (tag: string) => {
+        if (tag === 'Pending') return <Tag color="#2db7f5">{(tag + '').toUpperCase()}</Tag>;
+        else return <Tag color="#87d068">{(tag + '').toUpperCase()}</Tag>;
+      },
+    },
+    {
+      title: 'Ngày tạo',
+      dataIndex: 'dateOrdered',
+      key: 'dateOrdered',
+    },
+    // {
+    //   title: 'Chi tiết',
+    //   key: 'lastOnline',
+    //   render: (obj: OrderResponse) => {
+    //     return (
+    //       <div>
+    //         {' '}
+    //         <Button
+    //           icon={<i className="fas fa-user-circle"></i>}
+    //           type="primary"
+    //           // onClick={() => showModal(obj)}
+    //         >
+    //           &nbsp;&nbsp;Chi tiết
+    //         </Button>
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
   return (
     <div>
@@ -171,7 +255,6 @@ export const ListCustomerPage = () => {
       ) : (
         <div>
           <div className="row">
-            {listOrderByCustomer.length}
             &nbsp;{' '}
             <div className="col-5 text-start">
               <Search
@@ -298,14 +381,7 @@ export const ListCustomerPage = () => {
                   >
                     <Input />
                   </Form.Item>
-                  {/* <Form.Item
-                    label="Mật khẩu:"
-                    name="password"
-                    rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
-                    hasFeedback
-                  >
-                    <Input.Password />
-                  </Form.Item> */}
+
                   <Form.Item
                     label="Địa chỉ: "
                     name="address"
@@ -326,6 +402,35 @@ export const ListCustomerPage = () => {
               </div>
             </Modal>
           )}
+          <div>
+            <Modal
+              width={1000}
+              title="Basic Modal"
+              visible={isShowListOrderModal}
+              footer={footerOfListOrderlModal}
+              closable={false}
+            >
+              {isListOrderLoading === false ? 
+              <div>
+
+                <Table
+                  rowKey="_id"
+                  columns={ListOrderTableColumns}
+                  dataSource={listOrderByCustomer}
+                  pagination={false}
+                  scroll={{ y: 800 }}
+                />
+                <div className="text-center">
+                  <Pagination
+                    showSizeChanger={false}
+                    current={currentPage}
+                    onChange={(e) => handlePageListOrderOnChange(e)}
+                    total={totalPage * 10}
+                  />
+                </div>
+              </div> : <Loading/> }
+            </Modal>
+          </div>
         </div>
       )}
     </div>
