@@ -1,4 +1,4 @@
-import { ListResponse, Order, OrderResponse } from 'models';
+import { ListParams, ListResponse, Order, OrderResponse } from 'models';
 import axiosClient from './axios-client';
 
 const orderAPi = {
@@ -17,6 +17,10 @@ const orderAPi = {
 
   getById(id: string): Promise<Order> {
     const url = `/orders/${id}`;
+    return axiosClient.get(url);
+  },
+  getByCustomer(params: ListParams): Promise<ListResponse<OrderResponse>> {
+    const url = `/orders/customer/${params.id}?limit=5&page=${params.page}`;
     return axiosClient.get(url);
   },
   remove(id: string): Promise<any> {

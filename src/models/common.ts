@@ -22,10 +22,11 @@ export interface FilterFormat {
 }
 
 export interface ListParams {
-  _page: number;
-  _limit: number;
-  _sort: number;
-  _order: 'asc' | 'desc';
-
-  [key: string]: any;
+  page: number;
+  limit?: number;
+  sort?: number;
+  order?: 'asc' | 'desc';
+  id?: string
 }
+
+

@@ -2,22 +2,25 @@ import { OrderedListOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Modal, Table } from 'antd';
 import Search from 'antd/lib/input/Search';
 import CustomerAPi from 'api/customer-api';
+import orderAPi from 'api/order-api';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Toast } from 'components/Common';
 import { Loading } from 'components/Common/Loading';
-import { Customer, Product } from 'models';
+import { OrderActions } from 'features/order/orderSlice';
+import { Customer, ListParams, Product } from 'models';
 import React, { useEffect, useState } from 'react';
 import { customerActions } from '../customerSlice';
 
 let locale = {
-  emptyText: 'Chưa có sản phẩm nào được thêm vào',
+  emptyText: 'Không tìm thấy kết quả nào',
 };
-
 export const ListCustomerPage = () => {
   const dispatch = useAppDispatch();
   const listCustomer = useAppSelector((state) => state.customer.list);
   const isLoading = useAppSelector((state) => state.customer.loading);
+  const listOrderByCustomer = useAppSelector((state) => state.order.rawData.data);
   const [selectedCustomer, setselectedCustomer] = useState<Customer>();
+  const [currentPage, setcurrentPage] = useState<number>(1)
 
   useEffect(() => {
     dispatch(customerActions.fetchCustomerList());
@@ -28,6 +31,15 @@ export const ListCustomerPage = () => {
       dispatch(customerActions.fetchCustomerList());
     } else dispatch(customerActions.fetchCustomerResultListWhenSearch(query));
   };
+
+  const handleCustomerOrderClick = (obj: string | undefined) =>{
+     
+      let params : ListParams = {
+        id: obj,
+        page: currentPage
+      } 
+      dispatch(OrderActions.fetchOrderListByCustomer(params))
+  }
   // -- Add customer Modal
   const [isShowAddModal, setisShowAddModal] = useState(false);
 
@@ -142,7 +154,9 @@ export const ListCustomerPage = () => {
               &nbsp;&nbsp;Chi tiết
             </Button>
             &nbsp;&nbsp;
-            <Button danger icon={<OrderedListOutlined />} type="primary">
+            <Button
+            onClick = {() => handleCustomerOrderClick(obj?._id) }
+            danger icon={<OrderedListOutlined />} type="primary">
               &nbsp;&nbsp;Lịch sử mua hàng
             </Button>
           </div>
@@ -157,6 +171,7 @@ export const ListCustomerPage = () => {
       ) : (
         <div>
           <div className="row">
+            {listOrderByCustomer.length}
             &nbsp;{' '}
             <div className="col-5 text-start">
               <Search
@@ -181,6 +196,7 @@ export const ListCustomerPage = () => {
             dataSource={listCustomer}
             pagination={false}
             scroll={{ y: 800 }}
+            locale={locale}
           />
           <Modal
             closable={false}

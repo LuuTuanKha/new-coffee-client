@@ -18,7 +18,7 @@ const CustomerSlice = createSlice({
   initialState: initialState,
   reducers: {
     fetchCustomerList(state) {
-      state.loading = true;
+      // state.loading = true;
     },
     fetchCustomerResultListWhenSearch(state, action: PayloadAction<string>) {
       // state.loading = true;

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
-import { ListResponse, Order, OrderResponse } from 'models';
+import { ListParams, ListResponse, Order, OrderResponse } from 'models';
 
 export interface OrderState {
   loading: boolean;
@@ -22,8 +22,10 @@ const OrderSlice = createSlice({
   initialState: initialState,
   reducers: {
     fetchOrderList(state,action: PayloadAction<number>) {
-      console.log(action.payload)
       state.loading = true;
+    },
+    fetchOrderListByCustomer(state,action: PayloadAction<ListParams>) {
+
     },
     fetchOrderListSuccess(state, action: PayloadAction<ListResponse<OrderResponse>>) {
       state.rawData = action.payload;
