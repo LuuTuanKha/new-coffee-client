@@ -1,16 +1,16 @@
-import { OrderedListOutlined } from '@ant-design/icons';
+import { OrderedListOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Modal, Pagination, Table, Tag } from 'antd';
 import Search from 'antd/lib/input/Search';
 import confirm from 'antd/lib/modal/confirm';
 import CustomerAPi from 'api/customer-api';
-import orderAPi from 'api/order-api';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Toast } from 'components/Common';
 import { Loading } from 'components/Common/Loading';
 import { OrderActions } from 'features/order/orderSlice';
-import { Customer, ListParams, OrderResponse, Product } from 'models';
+import { Customer, ListParams, Product } from 'models';
 import React, { useEffect, useState } from 'react';
 import { customerActions } from '../customerSlice';
+
 
 let locale = {
   emptyText: 'Không tìm thấy kết quả nào',
@@ -297,12 +297,14 @@ export const ListCustomerPage = () => {
                 onSearch={(query) => onSearch(query)}
                 style={{ width: 200 }}
               />
-              <Button type="primary" onClick={() => dispatch(customerActions.fetchCustomerList())}>
+              <Button  type="primary" onClick={() => dispatch(customerActions.fetchCustomerList())}>
                 Mặc định
               </Button>
             </div>
             <div className="col-6 text-end">
-              <Button onClick={() => setisShowAddModal(true)} type="primary">
+              <Button onClick={() => setisShowAddModal(true)} type="primary"
+              icon={ <UserOutlined />}
+              >
                 Khách hàng mới
               </Button>
             </div>
