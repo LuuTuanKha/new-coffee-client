@@ -2,7 +2,9 @@ import {
   OrderedListOutlined
 } from '@ant-design/icons';
 import { Button, Form, Input, Modal, Pagination, Select, Table, Tag, Tooltip } from 'antd';
+import orderAPi from 'api/order-api';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { Toast } from 'components/Common';
 import { Loading } from 'components/Common/Loading';
 import { OrderResponse } from 'models';
 import React, { useEffect, useState } from 'react';
@@ -20,7 +22,7 @@ export const ListOrderPage = (props: Props) => {
     dispatch(OrderActions.fetchOrderList(currentPage));
   }, [currentPage, dispatch]);
 
-  const statusOnclick = () => {};
+  
   const columns: any = [
     {
       title: 'Mã hoá đơn',
@@ -61,7 +63,10 @@ export const ListOrderPage = (props: Props) => {
         <Tag  onClick={()=> handleShowStatusModal(obj)} color="#2db7f5">{(tag + '').toUpperCase()}</Tag>
       </Tooltip>
         
-        else return <Tag color="#87d068">{(tag + '').toUpperCase()}</Tag>;
+        else
+        if(tag==='Cancel')
+         return <Tag color="#FF6F91">{(tag + '').toUpperCase()}</Tag>
+         else return <Tag color="#87d068">{(tag + '').toUpperCase()}</Tag>
       },
     },
     {
@@ -106,8 +111,26 @@ export const ListOrderPage = (props: Props) => {
 
   //Change status modal
   const [isShowStatusModal, setisShowStatusModal] = useState(false);
-  const onChangeStatusFormSubmit = (values: any) =>{
-      console.log(values)
+  const onChangeStatusFormSubmit = async (values: any) =>{
+    try {
+      
+      await orderAPi.toogle(values)
+      Toast(
+        'success',
+        'Cập nhật hoá đơn thành công!',
+        'Hoá đơn được cập nhật thành công. Bạn có thể xem lại trong danh sách hoá đơn.'
+      );
+      setisShowStatusModal(false)
+      dispatch(OrderActions.fetchOrderList(currentPage))
+
+    } catch (error) {
+      Toast(
+        'success',
+        'Có lỗi xảy ra trong quá trình cập nhật!',
+        'Hoá đơn cập nhật thất bại. Vui lòng thử lại.'
+      );
+    }
+     
   }
   const handleShowStatusModal = (order: OrderResponse) => {
     console.log(order)
@@ -209,7 +232,7 @@ export const ListOrderPage = (props: Props) => {
               <Form
                 name="basic"
                 id="changeStatusForm"
-                // onFinish={onFormChangePasswordSubmit}
+                onFinish={onChangeStatusFormSubmit}
                 initialValues={selectedOrder}
                 autoComplete="off"
               >

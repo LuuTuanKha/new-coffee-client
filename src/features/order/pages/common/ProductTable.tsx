@@ -5,7 +5,7 @@ import { categoryActions } from 'features/category/categorySlice';
 import { orderItemsActions } from 'features/order/orderItemsSlice';
 import { productActions } from 'features/product/productSlice';
 import { Category, FilterFormat, Product } from 'models';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface Props {}
 
@@ -22,7 +22,7 @@ export const ProductTable = (props: Props) => {
   useEffect(() => {
     dispatch(productActions.fetchProductList());
     dispatch(categoryActions.fetchCategoryList());
-  }, []);
+  }, [dispatch]);
   const columns: any = [
     {
       title: 'Tên sản phẩm',
@@ -99,11 +99,14 @@ export const ProductTable = (props: Props) => {
       width: '10%',
     },
   ];
+
+
   return (
     <div className="col-7">
       {isLoading === true ? (
         <Loading />
       ) : (
+        
         <Table
           rowKey="_id"
           columns={columns}
