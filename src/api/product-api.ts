@@ -13,7 +13,7 @@ const productAPi = {
   },
   update(id: string, data: Product): Promise<Product> {
     const url = '/products/'+id;
-    return axiosClient.patch(url, data);
+    return axiosClient.put(url, data);
   },
 
   getById(id: string | undefined): Promise<ProductResponse> {
