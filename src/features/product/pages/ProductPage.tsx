@@ -8,9 +8,7 @@ import { Category, FilterFormat, Product, ProductResponse } from 'models';
 import React, { useEffect, useState } from 'react';
 import { productActions } from '../productSlice';
 
-interface Props {}
-
-export const ProductPage = (props: Props) => {
+export const ProductPage = () => {
   const dispatch = useAppDispatch();
   const listProduct: Product[] = useAppSelector((state) => state.product.list);
   const listCategory: Category[] = useAppSelector((state) => state.category.list);
@@ -57,8 +55,8 @@ export const ProductPage = (props: Props) => {
   const [isShowAddModal, setisShowAddModal] = useState(false);
 
   const onFormSubmitAddModal = async (product: ProductResponse) => {
-    product.images = []
-    console.log(product)
+    product.images = [];
+    console.log(product);
     try {
       await productApi.add(product);
       Toast(
@@ -92,7 +90,7 @@ export const ProductPage = (props: Props) => {
   const handleShowDetailModal = async (product: Product) => {
     console.log(product.category._id);
 
-   let productById = await productApi.getById(product._id)
+    let productById = await productApi.getById(product._id);
     await setselectedProduct(productById);
     await setisShowDetailModal(true);
   };
@@ -264,8 +262,12 @@ export const ProductPage = (props: Props) => {
               <InputNumber />
             </Form.Item>
 
-            <Form.Item label="Loại" name="category" rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]} >
-              <Select >
+            <Form.Item
+              label="Loại"
+              name="category"
+              rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
+            >
+              <Select>
                 {listCategory.map((category, index) => {
                   return <Select.Option value={category._id}>{category.name}</Select.Option>;
                 })}
@@ -327,7 +329,7 @@ export const ProductPage = (props: Props) => {
               </Form.Item>
 
               <Form.Item label="Loại" name="category">
-                <Select >
+                <Select>
                   {listCategory.map((category, index) => {
                     return <Select.Option value={category._id}>{category.name}</Select.Option>;
                   })}

@@ -5,7 +5,7 @@ import { categoryActions } from 'features/category/categorySlice';
 import { orderItemsActions } from 'features/order/orderItemsSlice';
 import { productActions } from 'features/product/productSlice';
 import { Category, FilterFormat, Product } from 'models';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 interface Props {}
 
@@ -40,7 +40,8 @@ export const ProductTable = (props: Props) => {
       title: 'Giá bán',
       dataIndex: 'price',
       key: 'price',
-      render: (price : number) => new Intl.NumberFormat('de-DE',{style:'currency',currency:'VND'}).format(price),
+      render: (price: number) =>
+        new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'VND' }).format(price),
 
       sorter: {
         compare: (a: Product, b: Product) => a.price - b.price,
@@ -100,13 +101,11 @@ export const ProductTable = (props: Props) => {
     },
   ];
 
-
   return (
     <div className="col-7">
       {isLoading === true ? (
         <Loading />
       ) : (
-        
         <Table
           rowKey="_id"
           columns={columns}
