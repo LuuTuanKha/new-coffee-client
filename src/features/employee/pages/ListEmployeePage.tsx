@@ -1,4 +1,6 @@
-import { Button, Form, Input, Modal, Table, Tag } from 'antd';
+import { Button, Form, Input, Modal, Select, Table } from 'antd';
+import confirm from 'antd/lib/modal/confirm';
+import employeeAPi from 'api/auth-api';
 import EmployeeAPi from 'api/employee-api';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Toast } from 'components/Common';
@@ -11,10 +13,45 @@ export const ListEmployeePage = () => {
   const dispatch = useAppDispatch();
   const listEmployee = useAppSelector((state) => state.employee.list);
   const isLoading = useAppSelector((state) => state.employee.loading);
-  const [selectedEmployee, setselectedEmployee] = useState<Employee>()
+  const [selectedEmployee, setselectedEmployee] = useState<Employee>();
   useEffect(() => {
     dispatch(employeeActions.fetchEmployeeList());
   }, [dispatch]);
+
+  //Delete Employee
+  const confirmDelete = async () =>{
+    try {
+      if (selectedEmployee?._id) await employeeAPi.remove(selectedEmployee._id);
+      Toast(
+        'success',
+        'Xoá nhân viên thành công!',
+        'nhân viên được xoá thành công. Bạn có thể xem lại trong danh sách nhân viên.'
+      );
+      setisShowDetailModal(false)
+      dispatch(employeeActions.fetchEmployeeList());
+    } catch (error: any) {
+      Toast('danger', 'Xoá nhân viên thất bại!', error.response.data.error);
+    }
+  }
+  const handleDelete = async () => {
+
+    confirm({
+      title: 'Bạn có chắc chắn muốn xoá nhân viên này không?',
+      // icon: <ExclamationCircleOutlined />,
+      content: 'Nhân viên một khi đã bị xoá, sẽ không thể hoàn tác...',
+      okText: 'Xoá',
+      okType: 'danger',
+      cancelText: 'Huỷ',
+      onOk() {
+        confirmDelete()
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+    
+  };
+
   //Add table
   const [isShowAddModal, setisShowAddModal] = useState<boolean>(false);
 
@@ -58,7 +95,7 @@ export const ListEmployeePage = () => {
   const [isShowDetailModal, setisShowDetailModal] = useState(false);
   const handleShowDetailModal = async (obj: Employee) => {
     console.log(obj);
-    
+
     await setselectedEmployee(obj);
     await setisShowDetailModal(true);
   };
@@ -68,8 +105,7 @@ export const ListEmployeePage = () => {
 
   const onFormSubmitDetailModal = async (employee: Employee) => {
     try {
-      if(employee._id)
-      await EmployeeAPi.update(employee._id,employee);
+      if (employee._id) await EmployeeAPi.update(employee._id, employee);
       Toast(
         'success',
         'Cập nhật nhân viên thành công!',
@@ -210,6 +246,13 @@ export const ListEmployeePage = () => {
                 >
                   <Input />
                 </Form.Item>
+                <Form.Item label="Select" name="role">
+                  <Select>
+                    <Select.Option value="employee">Nhân viên</Select.Option>
+                    <Select.Option value="manager">Quản lý</Select.Option>
+                    <Select.Option value="admin">Quản trị viên</Select.Option>
+                  </Select>
+                </Form.Item>
               </Form>
             </div>
           </Modal>
@@ -231,14 +274,13 @@ export const ListEmployeePage = () => {
                   initialValues={selectedEmployee}
                 >
                   <Form.Item
-                  label="Tên :"
-                  name="_id"
-                  rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
-                  hasFeedback
-                  
-                >
-                  <Input disabled />
-                </Form.Item>
+                    label="Mã nhân viên :"
+                    name="_id"
+                    rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
+                    hasFeedback
+                  >
+                    <Input disabled />
+                  </Form.Item>
                   <Form.Item
                     label="Tên :"
                     name="name"
@@ -255,14 +297,7 @@ export const ListEmployeePage = () => {
                   >
                     <Input />
                   </Form.Item>
-                  {/* <Form.Item
-                    label="Mật khẩu:"
-                    name="password"
-                    rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
-                    hasFeedback
-                  >
-                    <Input.Password />
-                  </Form.Item> */}
+
                   <Form.Item
                     label="Địa chỉ: "
                     name="address"
@@ -281,6 +316,13 @@ export const ListEmployeePage = () => {
                   </Form.Item>
                 </Form>
               </div>
+              <div className="text-center">
+                <Button 
+                onClick={()=>handleDelete()}
+                icon={<i className="fas fa-trash"></i>} type="primary" danger>
+                  &nbsp; Xoá nhân viên này
+                </Button>
+              </div>
             </Modal>
           )}
           <Table
@@ -292,8 +334,6 @@ export const ListEmployeePage = () => {
           />
         </div>
       )}
-
-      
     </div>
   );
 };

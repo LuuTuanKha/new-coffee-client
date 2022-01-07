@@ -1,6 +1,7 @@
 import { OrderedListOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Modal, Pagination, Table, Tag } from 'antd';
 import Search from 'antd/lib/input/Search';
+import confirm from 'antd/lib/modal/confirm';
 import CustomerAPi from 'api/customer-api';
 import orderAPi from 'api/order-api';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
@@ -28,6 +29,40 @@ export const ListCustomerPage = () => {
     dispatch(customerActions.fetchCustomerList());
   }, [dispatch]);
 
+  // handle Delete customer
+  const confirmDelete = async () =>{
+    try {
+      if (selectedCustomer?._id) await CustomerAPi.remove(selectedCustomer._id);
+      Toast(
+        'success',
+        'Xoá khách hàng thành công!',
+        'Khách hàng được xoá thành công. Bạn có thể xem lại trong danh sách khách hàng.'
+      );
+      setisShowDetailModal(false)
+      dispatch(customerActions.fetchCustomerList());
+    } catch (error: any) {
+      Toast('danger', 'Xoá khách hàng thất bại!', error.response.data.error);
+    }
+  }
+  const handleDelete = async () => {
+
+    confirm({
+      title: 'Bạn có chắc chắn muốn xoá khách hàng này không?',
+      // icon: <ExclamationCircleOutlined />,
+      content: 'Khách hàng một khi đã bị xoá, sẽ không thể hoàn tác...',
+      okText: 'Xoá',
+      okType: 'danger',
+      cancelText: 'Huỷ',
+      onOk() {
+        confirmDelete()
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+    
+  };
+  // handle Search 
   const onSearch = (query: string) => {
     if (query === '') {
       dispatch(customerActions.fetchCustomerList());
@@ -48,9 +83,9 @@ export const ListCustomerPage = () => {
   // -- Add customer Modal
   const [isShowAddModal, setisShowAddModal] = useState(false);
 
-  const onFormSubmitAddModal = async (product: Product) => {
+  const onFormSubmitAddModal = async (customer: Customer) => {
     try {
-      await CustomerAPi.add(product);
+      await CustomerAPi.add(customer);
       Toast(
         'success',
         'Thêm khách hàng thành công!',
@@ -63,12 +98,12 @@ export const ListCustomerPage = () => {
     }
   };
   const footerOfAddModal = [
-    <Button key="back" onClick={() => handleCancelDetailModal()}>
+    <Button key="back" onClick={() => setisShowAddModal(false)}>
       Thoát
     </Button>,
 
     <Button
-      form="DetailForm"
+      form="AddForm"
       icon={<i className="fas fa-save"></i>}
       type="primary"
       key="submit"
@@ -358,7 +393,7 @@ export const ListCustomerPage = () => {
                   initialValues={selectedCustomer}
                 >
                   <Form.Item
-                    label="Tên :"
+                    label="Mã khách hàng :"
                     name="_id"
                     rules={[{ required: true, message: 'Thuộc tính này là bắt buộc!' }]}
                     hasFeedback
@@ -399,6 +434,13 @@ export const ListCustomerPage = () => {
                     <Input />
                   </Form.Item>
                 </Form>
+                <div className="text-center">
+                <Button 
+                onClick={()=>handleDelete()}
+                icon={<i className="fas fa-trash"></i>} type="primary" danger>
+                  &nbsp; Xoá khách hàng này
+                </Button>
+              </div>
               </div>
             </Modal>
           )}
