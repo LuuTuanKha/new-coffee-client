@@ -15,7 +15,7 @@ interface Props {
 const MainLayout = (props: Props) => {
     const {layoutSelectedIndex} = props
     const { Content } = Layout
-    const layoutList: any[] = [<OrderPage/>,<ListOrderPage/>,<TotalSales/>,<ProductPage/>,<ProductPage/>,<ListCustomerPage/>,<ListEmployeePage/>, ]
+    const layoutList: any[] = [<OrderPage/>,<ListOrderPage/>,<TotalSales/>,<ProductPage/>,<ListCustomerPage/>,<ListEmployeePage/>, ]
     return (
         <Layout style={{ padding: '0px 10px 10px' }}>
             <Content
